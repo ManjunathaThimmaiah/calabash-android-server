@@ -6,19 +6,27 @@ public class UiScrollableCustom extends UiScrollable {
     }
 
     public boolean scrollIntoView(UiSelector selector) throws UiObjectNotFoundException {
-        Tracer.trace(new Object[]{selector});
-        UiSelector childSelector = this.getSelector().childSelector(selector);
-        boolean found = false;
-
-        for (int x = 0; x < getMaxSearchSwipes() && !found; ++x) {
-            if (this.exists(childSelector)) {
-                found = true;
-            } else {
-                boolean scrolled = this.scrollForward(100);
-                if (!scrolled) break;
-            }
-        }
-        return found;
+        return scrollIntoView(selector, 100);
     }
 
+    public boolean scrollIntoView(UiSelector selector, int scrollSize) throws UiObjectNotFoundException {
+        Tracer.trace(new Object[]{selector});
+        for (int x = 0; x < getMaxSearchSwipes() && !findElement(selector); x++) {
+            if(!this.scrollForward(scrollSize) && x!=0) {
+                findElement(selector);
+                break;
+            }
+            findElement(selector);
+        }
+        return findElement(selector);
+    }
+
+    private boolean findElement(UiSelector selector){
+        UiSelector childSelector = this.getSelector().childSelector(selector);
+        if (this.exists(selector) || this.exists(childSelector)){
+            return true;
+        }else {
+            return false;
+        }
+    }
 }
