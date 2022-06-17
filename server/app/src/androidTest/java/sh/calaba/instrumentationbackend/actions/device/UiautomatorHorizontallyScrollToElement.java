@@ -14,7 +14,7 @@ import java.lang.reflect.Method;
 import static sh.calaba.instrumentationbackend.actions.device.StrategyUtils.convertBySelectorStrategyToUiSelectorStrategy;
 import static sh.calaba.instrumentationbackend.actions.device.StrategyVerifier.verifyStrategy;
 
-public class UiautomatorScrollToElement implements Action {
+public class UiautomatorHorizontallyScrollToElement implements Action {
     @Override
     public Result execute(String... args) {
         InstrumentationBackend.getUiDevice();
@@ -57,9 +57,7 @@ public class UiautomatorScrollToElement implements Action {
                 throw new RuntimeException(e);
             }
 
-            if(args.length>=5 && args[4].equals("horizontal")){
-                scrollable.setAsHorizontalList();
-            }
+            scrollable.setAsHorizontalList();
 
             if (!scrollable.scrollIntoView(targetViewSelector, scrollSize) ) {
                 String errorMessage = String.format("Found no elements for locator: %s by strategy: %s", targetLocator, bySelectorTargetStrategy);
@@ -78,5 +76,5 @@ public class UiautomatorScrollToElement implements Action {
     }
 
     @Override
-    public String key() { return "ui_automator_find_element_by";}
+    public String key() { return "ui_automator_horizontally_find_element_by";}
 }
