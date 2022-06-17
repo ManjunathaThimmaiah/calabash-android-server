@@ -33,7 +33,7 @@ public class UiautomatorScrollToElement implements Action {
             UiScrollableCustom scrollable;
 
             try {
-                if(args.length>=3 && !args[3].isEmpty()){
+                if(args.length>=3 && args[3]!=null){
                     String bySelectorParentStrategy = args[2];
                     String parentLocator = args[3];
 
@@ -57,6 +57,10 @@ public class UiautomatorScrollToElement implements Action {
                 throw new RuntimeException(e);
             }
 
+            if(args.length>=5 && args[4].equals("horizontal")){
+                scrollable.setAsHorizontalList();
+            }
+
             if (!scrollable.scrollIntoView(targetViewSelector, scrollSize) ) {
                 String errorMessage = String.format("Found no elements for locator: %s by strategy: %s", targetLocator, bySelectorTargetStrategy);
                 throw new UiObjectNotFoundException(errorMessage);
@@ -74,5 +78,5 @@ public class UiautomatorScrollToElement implements Action {
     }
 
     @Override
-    public String key() { return "find_element_by";}
+    public String key() { return "ui_automator_find_element_by";}
 }
