@@ -1,8 +1,5 @@
 package androidx.test.uiautomator;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-
 public class UiScrollableCustom extends UiScrollable {
     public UiScrollableCustom(UiSelector container) {
         super(container);
