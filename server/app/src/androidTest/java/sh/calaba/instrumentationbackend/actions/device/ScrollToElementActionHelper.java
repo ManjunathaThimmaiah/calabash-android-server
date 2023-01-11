@@ -31,7 +31,7 @@ public class ScrollToElementActionHelper {
             scrollable.setAsVerticalList();
         }
 
-        if (!scrollable.scrollIntoView(targetViewSelector, targetBySelectorStrategy,true)) {
+        if (!scrollable.scrollIntoView(targetViewSelector, targetBySelectorStrategy, true)) {
             String errorMessage = String.format("Found no elements for locator: %s by strategy: %s",
                   targetLocator, targetBySelectorStrategy);
             throw new UiObjectNotFoundException(errorMessage);

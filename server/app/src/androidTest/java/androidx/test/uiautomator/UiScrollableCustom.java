@@ -36,22 +36,20 @@ public class UiScrollableCustom extends UiScrollable {
         return found;
     }
 
-    public boolean scrollIntoView(UiSelector selector, String targetBySelectorStrategy, boolean forceScroll) throws UiObjectNotFoundException, NoSuchMethodException, IllegalAccessException, InvocationTargetException, InvocationTargetException {
+    public boolean scrollIntoView(UiSelector selector, String targetBySelectorStrategy, boolean forceScroll) throws UiObjectNotFoundException, NoSuchMethodException, IllegalAccessException, InvocationTargetException {
         Tracer.trace(new Object[]{selector});
         UiSelector childSelector = this.getSelector().childSelector(selector);
         Method strategyMethod = By.class.getMethod(targetBySelectorStrategy, String.class);
         BySelector byselector = (BySelector) strategyMethod.invoke(By.class, (String.valueOf(childSelector)));
         boolean found = false;
-        if (this.exists(childSelector)) {
-            found = true;
-        }else {
-            for (int x = 0; x < getMaxSearchSwipes(); ++x) {
+
+        for (int x = 0; x < getMaxSearchSwipes() && !found; ++x) {
+            if (this.exists(childSelector)) {
+                found = true;
+            } else {
                 boolean scrolled = this.scrollForward(50);
                 getDevice().waitForIdle();
                 getDevice().wait(Until.findObject(byselector), TIMEOUT);
-                if (this.exists(childSelector)) {
-                    found = true; break;
-                };
                 if (!forceScroll && !scrolled) break;
             }
         }
