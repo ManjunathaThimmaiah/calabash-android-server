@@ -8,7 +8,7 @@ public class UiScrollableCustom extends UiScrollable {
         super(container);
     }
 
-    private static final Long TIMEOUT = 1000L;
+    private static final Long TIMEOUT = 10L;
 
     public boolean scrollIntoView(UiSelector selector) throws UiObjectNotFoundException {
         return scrollIntoView(selector, false);
@@ -22,6 +22,7 @@ public class UiScrollableCustom extends UiScrollable {
     public boolean scrollIntoView(UiSelector selector, boolean forceScroll) throws UiObjectNotFoundException {
         Tracer.trace(new Object[]{selector});
         UiSelector childSelector = this.getSelector().childSelector(selector);
+        UiObject element = new UiObject(getDevice(), childSelector);
         boolean found = false;
 
         for (int x = 0; x < getMaxSearchSwipes() && !found; ++x) {
@@ -29,27 +30,7 @@ public class UiScrollableCustom extends UiScrollable {
                 found = true;
             } else {
                 boolean scrolled = this.scrollForward(100);
-                getDevice().waitForIdle();
-                if (!forceScroll && !scrolled) break;
-            }
-        }
-        return found;
-    }
-
-    public boolean scrollIntoView(UiSelector selector, String targetBySelectorStrategy, boolean forceScroll) throws UiObjectNotFoundException, NoSuchMethodException, IllegalAccessException, InvocationTargetException {
-        Tracer.trace(new Object[]{selector});
-        UiSelector childSelector = this.getSelector().childSelector(selector);
-        Method strategyMethod = By.class.getMethod(targetBySelectorStrategy, String.class);
-        BySelector byselector = (BySelector) strategyMethod.invoke(By.class, (String.valueOf(childSelector)));
-        boolean found = false;
-
-        for (int x = 0; x < getMaxSearchSwipes() && !found; ++x) {
-            if (this.exists(childSelector)) {
-                found = true;
-            } else {
-                boolean scrolled = this.scrollForward(50);
-                getDevice().waitForIdle();
-                getDevice().wait(Until.findObject(byselector), TIMEOUT);
+                element.waitForExists(TIMEOUT);
                 if (!forceScroll && !scrolled) break;
             }
         }
